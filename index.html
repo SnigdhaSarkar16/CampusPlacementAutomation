@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Placement Shortlist Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --paper: #F4F1E6;
+    --paper-raised: #FBFAF4;
+    --ink: #1B2A41;
+    --ink-soft: #4A5568;
+    --rule: #D9D2BE;
+    --rule-strong: #B9AF93;
+    --brass: #9C7A34;
+    --brass-deep: #7A5E24;
+    --pass: #2F6F4E;
+    --pass-bg: #E4EFE7;
+    --fail: #9B4235;
+    --fail-bg: #F3E4E0;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #14181F;
+      --paper-raised: #1B212B;
+      --ink: #EDE8DA;
+      --ink-soft: #A9AFBC;
+      --rule: #333A46;
+      --rule-strong: #454E5C;
+      --brass: #C9A75B;
+      --brass-deep: #E0BE7C;
+      --pass: #6FBE93;
+      --pass-bg: #1E332A;
+      --fail: #E08877;
+      --fail-bg: #382422;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14181F;
+    --paper-raised: #1B212B;
+    --ink: #EDE8DA;
+    --ink-soft: #A9AFBC;
+    --rule: #333A46;
+    --rule-strong: #454E5C;
+    --brass: #C9A75B;
+    --brass-deep: #E0BE7C;
+    --pass: #6FBE93;
+    --pass-bg: #1E332A;
+    --fail: #E08877;
+    --fail-bg: #382422;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    line-height: 1.5;
+    min-height: 100%;
+  }
+  html, body { height: 100%; }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 1.1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .masthead-mark {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .crest {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+  }
+  .masthead h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 4vw, 2.15rem);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .masthead p {
+    margin: 0.2rem 0 0;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .masthead-date {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* Upload zone */
+  .intake {
+    border: 1.5px dashed var(--rule-strong);
+    background: var(--paper-raised);
+    padding: 2.2rem 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .intake.drag {
+    border-color: var(--brass);
+    background: color-mix(in srgb, var(--brass) 8%, var(--paper-raised));
+  }
+  .intake h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    margin: 0 0 0.4rem;
+  }
+  .intake p {
+    margin: 0 0 1.1rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    max-width: 38ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .intake input[type=file] { display: none; }
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0.65rem 1.3rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn:focus-visible, .tab:focus-visible, .searchbox input:focus-visible, .upload-label:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+  }
+  .upload-label { cursor: pointer; }
+  .intake .filename {
+    display: block;
+    margin-top: 0.9rem;
+    font-size: 0.76rem;
+    color: var(--brass-deep);
+  }
+  .intake .err {
+    display: block;
+    margin-top: 0.9rem;
+    font-size: 0.76rem;
+    color: var(--fail);
+  }
+
+  /* Summary stamp row */
+  .summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 2rem;
+  }
+  .stat {
+    background: var(--paper-raised);
+    padding: 1.1rem 1.2rem;
+  }
+  .stat .n {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .stat .n.pass { color: var(--pass); }
+  .stat .n.fail { color: var(--fail); }
+  .stat .l {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-top: 0.35rem;
+    letter-spacing: 0.02em;
+  }
+  .stamp-cell {
+    background: var(--paper-raised);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.4rem;
+  }
+  .stamp {
+    border: 2.5px solid var(--brass);
+    color: var(--brass-deep);
+    border-radius: 50%;
+    width: 84px;
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transform: rotate(-9deg);
+    line-height: 1.25;
+  }
+
+  /* Branch distribution */
+  .branchbar {
+    margin-bottom: 2rem;
+  }
+  .branchbar h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 0 0 0.75rem;
+    color: var(--ink-soft);
+  }
+  .brow {
+    display: grid;
+    grid-template-columns: 4.2rem 1fr 2.4rem;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+  .brow .track {
+    height: 9px;
+    background: var(--rule);
+    position: relative;
+  }
+  .brow .fill {
+    position: absolute;
+    inset: 0;
+    background: var(--brass);
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+  .brow .ct { text-align: right; color: var(--ink-soft); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 1rem;
+  }
+  .tab {
+    font-family: var(--font-mono);
+    background: none;
+    border: none;
+    padding: 0.6rem 1.1rem 0.55rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1.5px;
+    transition: color 0.15s ease;
+  }
+  .tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--brass);
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .searchbox input {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-strong);
+    padding: 0.45rem 0.7rem;
+    color: var(--ink);
+    width: 220px;
+    max-width: 50vw;
+  }
+  .toolbar .count {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  /* Table / register */
+  .tablewrap {
+    overflow-x: auto;
+    border-top: 1.5px solid var(--ink);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    min-width: 560px;
+  }
+  thead th {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid var(--rule-strong);
+    color: var(--ink-soft);
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  tbody tr:hover td { background: var(--paper-raised); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .rank {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+  }
+  .reason-tag {
+    display: inline-block;
+    background: var(--fail-bg);
+    color: var(--fail);
+    padding: 0.12rem 0.5rem;
+    font-size: 0.7rem;
+    border-radius: 2px;
+    margin: 0.1rem 0.25rem 0.1rem 0;
+  }
+  .pass-tag {
+    color: var(--pass);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+  .empty-state {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .hidden { display: none !important; }
+
+  footer {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 520px) {
+    .summary { grid-template-columns: 1fr 1fr; }
+    .stamp-cell { grid-column: 1 / -1; }
+    .searchbox input { width: 100%; max-width: none; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-mark">
+      <svg class="crest" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M24 4L44 14L24 24L4 14L24 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M12 19V30C12 30 16 35 24 35C32 35 36 30 36 30V19" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M24 24V40" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      <div>
+        <h1>Placement Shortlist Board</h1>
+        <p>Automated eligibility screening — campus placement drive</p>
+      </div>
+    </div>
+    <div class="masthead-date" id="runDate"></div>
+  </header>
+
+  <section class="intake" id="intake">
+    <h2>Post this cycle's results</h2>
+    <p>Upload the <strong>ShortlistReport.xlsx</strong> file generated by the placement bot. Everything is read in your browser — nothing is uploaded anywhere.</p>
+    <label class="btn upload-label" for="fileInput" tabindex="0">Choose file</label>
+    <input type="file" id="fileInput" accept=".xlsx,.xls">
+    <span class="filename" id="filename"></span>
+    <span class="err hidden" id="err"></span>
+  </section>
+
+  <div id="results" class="hidden">
+
+    <section class="summary">
+      <div class="stat">
+        <div class="n pass" id="passCount">0</div>
+        <div class="l">Shortlisted</div>
+      </div>
+      <div class="stat">
+        <div class="n fail" id="failCount">0</div>
+        <div class="l">Not eligible</div>
+      </div>
+      <div class="stamp-cell">
+        <div class="stamp" id="stampText">RESULTS<br>POSTED</div>
+      </div>
+    </section>
+
+    <section class="branchbar" id="branchSection">
+      <h3>Shortlisted by branch</h3>
+      <div id="branchRows"></div>
+    </section>
+
+    <section>
+      <div class="tabs">
+        <button class="tab active" id="tabPass" type="button">Shortlisted</button>
+        <button class="tab" id="tabFail" type="button">Not eligible</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="searchbox">
+          <input type="text" id="search" placeholder="Search name, ID or branch…">
+        </div>
+        <div class="count" id="visibleCount"></div>
+      </div>
+
+      <div class="tablewrap">
+        <table id="passTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Branch</th>
+              <th class="num">CGPA</th>
+              <th class="num">10th %</th>
+              <th class="num">12th %</th>
+              <th class="num">Attend. %</th>
+            </tr>
+          </thead>
+          <tbody id="passBody"></tbody>
+        </table>
+        <table id="failTable" class="hidden">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Branch</th>
+              <th class="num">CGPA</th>
+              <th>Reason not shortlisted</th>
+            </tr>
+          </thead>
+          <tbody id="failBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state hidden" id="emptyState">No matching records.</div>
+    </section>
+
+  </div>
+
+  <footer>
+    Generated from an RPA workflow built in UiPath Studio Community. Reads student records, applies eligibility rules, and produces this shortlist automatically.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const fileInput = document.getElementById('fileInput');
+  const intake = document.getElementById('intake');
+  const filenameEl = document.getElementById('filename');
+  const errEl = document.getElementById('err');
+  const results = document.getElementById('results');
+  const runDate = document.getElementById('runDate');
+
+  let shortlist = [];
+  let rejected = [];
+  let activeTab = 'pass';
+
+  runDate.textContent = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+
+  function showError(msg) {
+    errEl.textContent = msg;
+    errEl.classList.remove('hidden');
+    filenameEl.textContent = '';
+  }
+
+  function col(row, keys) {
+    for (const k of keys) {
+      if (row[k] !== undefined && row[k] !== null && row[k] !== '') return row[k];
+    }
+    return '';
+  }
+
+  function num(v) {
+    const n = parseFloat(v);
+    return isNaN(n) ? '—' : n;
+  }
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+  });
+  ['dragover'].forEach(ev => intake.addEventListener(ev, (e) => { e.preventDefault(); intake.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => intake.addEventListener(ev, (e) => { e.preventDefault(); intake.classList.remove('drag'); }));
+  intake.addEventListener('drop', (e) => {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+
+  function handleFile(file) {
+    errEl.classList.add('hidden');
+    filenameEl.textContent = 'Reading ' + file.name + ' …';
+    const reader = new FileReader();
+    reader.onerror = () => showError('Could not read that file. Try again.');
+    reader.onload = (ev) => {
+      try {
+        const data = new Uint8Array(ev.target.result);
+        const wb = XLSX.read(data, { type: 'array' });
+        const shortName = wb.SheetNames.find(n => /shortlist/i.test(n)) || wb.SheetNames[0];
+        const rejName = wb.SheetNames.find(n => /reject/i.test(n));
+        if (!shortName) { showError('No recognizable sheet found in this file.'); return; }
+
+        shortlist = XLSX.utils.sheet_to_json(wb.Sheets[shortName], { defval: '' });
+        rejected = rejName ? XLSX.utils.sheet_to_json(wb.Sheets[rejName], { defval: '' }) : [];
+
+        if (shortlist.length === 0 && rejected.length === 0) {
+          showError('That file has no rows. Check it is the ShortlistReport.xlsx the bot produced.');
+          return;
+        }
+
+        filenameEl.textContent = file.name + ' — ' + (shortlist.length + rejected.length) + ' records loaded';
+        render();
+        results.classList.remove('hidden');
+        results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        showError('Could not parse this file as an Excel report. ' + (err && err.message ? err.message : ''));
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function render() {
+    document.getElementById('passCount').textContent = shortlist.length;
+    document.getElementById('failCount').textContent = rejected.length;
+
+    // Branch distribution among shortlisted
+    const branchCounts = {};
+    shortlist.forEach(r => {
+      const b = col(r, ['Branch']) || 'Unknown';
+      branchCounts[b] = (branchCounts[b] || 0) + 1;
+    });
+    const branchRows = document.getElementById('branchRows');
+    const branchSection = document.getElementById('branchSection');
+    branchRows.innerHTML = '';
+    const maxCt = Math.max(1, ...Object.values(branchCounts));
+    const sortedBranches = Object.entries(branchCounts).sort((a,b) => b[1]-a[1]);
+    if (sortedBranches.length === 0) {
+      branchSection.classList.add('hidden');
+    } else {
+      branchSection.classList.remove('hidden');
+      sortedBranches.forEach(([branch, ct]) => {
+        const row = document.createElement('div');
+        row.className = 'brow';
+        row.innerHTML = `<span>${escapeHtml(branch)}</span><span class="track"><span class="fill"></span></span><span class="ct">${ct}</span>`;
+        branchRows.appendChild(row);
+        requestAnimationFrame(() => {
+          row.querySelector('.fill').style.width = (ct / maxCt * 100) + '%';
+        });
+      });
+    }
+
+    renderPass();
+    renderFail();
+    applyFilter();
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function renderPass() {
+    const body = document.getElementById('passBody');
+    body.innerHTML = '';
+    const sorted = [...shortlist].sort((a,b) => (parseFloat(col(b,['CGPA'])) || 0) - (parseFloat(col(a,['CGPA'])) || 0));
+    sorted.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      tr.dataset.search = [col(r,['StudentID','Student ID']), col(r,['Name']), col(r,['Branch'])].join(' ').toLowerCase();
+      tr.innerHTML = `
+        <td class="rank">${i+1}</td>
+        <td>${escapeHtml(col(r,['StudentID','Student ID']))}</td>
+        <td>${escapeHtml(col(r,['Name']))}</td>
+        <td>${escapeHtml(col(r,['Branch']))}</td>
+        <td class="num">${num(col(r,['CGPA']))}</td>
+        <td class="num">${num(col(r,['Tenth_Percent','Tenth Percent']))}</td>
+        <td class="num">${num(col(r,['Twelfth_Percent','Twelfth Percent']))}</td>
+        <td class="num">${num(col(r,['Attendance_Percent','Attendance Percent']))}</td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  function renderFail() {
+    const body = document.getElementById('failBody');
+    body.innerHTML = '';
+    rejected.forEach(r => {
+      const tr = document.createElement('tr');
+      const reasonRaw = col(r,['RejectionReason','Rejection Reason','Reason']);
+      const reasons = String(reasonRaw).split(';').map(s => s.trim()).filter(Boolean);
+      const reasonHtml = reasons.length
+        ? reasons.map(rs => `<span class="reason-tag">${escapeHtml(rs)}</span>`).join('')
+        : escapeHtml(reasonRaw);
+      tr.dataset.search = [col(r,['StudentID','Student ID']), col(r,['Name']), col(r,['Branch'])].join(' ').toLowerCase();
+      tr.innerHTML = `
+        <td>${escapeHtml(col(r,['StudentID','Student ID']))}</td>
+        <td>${escapeHtml(col(r,['Name']))}</td>
+        <td>${escapeHtml(col(r,['Branch']))}</td>
+        <td class="num">${num(col(r,['CGPA']))}</td>
+        <td>${reasonHtml}</td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  // Tabs
+  const tabPass = document.getElementById('tabPass');
+  const tabFail = document.getElementById('tabFail');
+  const passTable = document.getElementById('passTable');
+  const failTable = document.getElementById('failTable');
+
+  tabPass.addEventListener('click', () => switchTab('pass'));
+  tabFail.addEventListener('click', () => switchTab('fail'));
+
+  function switchTab(tab) {
+    activeTab = tab;
+    tabPass.classList.toggle('active', tab === 'pass');
+    tabFail.classList.toggle('active', tab === 'fail');
+    passTable.classList.toggle('hidden', tab !== 'pass');
+    failTable.classList.toggle('hidden', tab !== 'fail');
+    document.getElementById('search').value = '';
+    applyFilter();
+  }
+
+  document.getElementById('search').addEventListener('input', applyFilter);
+
+  function applyFilter() {
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    const table = activeTab === 'pass' ? passTable : failTable;
+    const rows = table.querySelectorAll('tbody tr');
+    let visible = 0;
+    rows.forEach(tr => {
+      const match = !q || (tr.dataset.search || '').includes(q);
+      tr.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+    document.getElementById('visibleCount').textContent = visible + ' of ' + rows.length + ' shown';
+    document.getElementById('emptyState').classList.toggle('hidden', rows.length === 0 || visible > 0);
+  }
+})();
+</script>
+</body>
+</html>
