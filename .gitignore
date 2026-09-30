@@ -1,0 +1,16 @@
+# UiPath project files that should NOT be tracked in Git
+.local/
+.settings/
+.tmp/
+temp/
+project.local.json
+Generated_Documentation/
+*.userproj
+
+# Windows / editor junk
+Thumbs.db
+desktop.ini
+.vscode/
+
+# Don't commit the bot's generated output report (it's regenerated each run)
+Output/*.xlsx

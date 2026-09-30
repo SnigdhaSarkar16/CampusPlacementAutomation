@@ -1,0 +1,6 @@
+{
+  "Name": "CampusPlacementAutomation",
+  "ProjectType": "Process",
+  "Description": "Reads student records, applies eligibility rules and creates a shortlist report",
+  "MainFile": "Main.xaml"
+}
