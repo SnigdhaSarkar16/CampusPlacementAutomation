@@ -14,3 +14,4 @@ desktop.ini
 
 # Don't commit the bot's generated output report (it's regenerated each run)
 Output/*.xlsx
+campus-placement-automation/
