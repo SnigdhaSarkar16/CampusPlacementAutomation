@@ -2,6 +2,8 @@
 
 An RPA bot built in **UiPath Studio (Community Edition)** that automates campus placement shortlisting. It reads student records from Excel, applies configurable eligibility rules, and produces a shortlist report — with no manual filtering required.
 
+**Live demo:** [snigdhasarkar16.github.io/CampusPlacementAutomation](https://snigdhasarkar16.github.io/CampusPlacementAutomation/) — upload the bot's generated `ShortlistReport.xlsx` to see the results board.
+
 ## What it does
 
 1. Reads student records from `StudentRecords.xlsx`
@@ -51,9 +53,15 @@ CampusPlacementAutomation/
 | Eligible branches | CSE, IT, ECE, AIDS |
 | Required placement status | Unplaced |
 
-## Results dashboard (optional)
+## Results dashboard
 
-A lightweight results-viewer page reads the generated `ShortlistReport.xlsx` directly in the browser and displays it as a searchable shortlist/rejected board — no server required.
+**[snigdhasarkar16.github.io/CampusPlacementAutomation](https://snigdhasarkar16.github.io/CampusPlacementAutomation/)**
+
+`index.html` is a self-contained page (hosted with GitHub Pages) that reads the bot's generated `ShortlistReport.xlsx` directly in the browser — no server, no upload to any external service. After running the bot, open the link above and upload the report to see:
+
+- Shortlisted vs. rejected counts
+- Shortlisted students by branch
+- A sortable, searchable Shortlisted table (by CGPA) and a Rejected table (with reason tags)
 
 ## Author
 
