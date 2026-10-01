@@ -100,7 +100,7 @@
       <AssemblyReference>System.Linq.Queryable</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="595.6,8990.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1110,8990.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -108,11 +108,7 @@
     </sap:WorkflowViewStateService.ViewState>
     <Sequence DisplayName="Placement Bot" sap:VirtualizedContainerService.HintSize="588.8,8967.2" sap2010:WorkflowViewState.IdRef="Sequence_2">
       <Sequence.Variables>
-        <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="config">
-          <Variable.Default>
-            <VisualBasicValue x:TypeArguments="scg:Dictionary(x:String, x:String)" ExpressionText="New Dictionary(Of String, String)" />
-          </Variable.Default>
-        </Variable>
+        <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Default="[New Dictionary(Of String, String)]" Name="config" />
         <Variable x:TypeArguments="sd:DataTable" Name="dtRejected" />
         <Variable x:TypeArguments="sd:DataTable" Name="dtShortlist" />
         <Variable x:TypeArguments="sd:DataTable" Name="dtRules" />
@@ -125,21 +121,9 @@
         <Variable x:TypeArguments="x:String" Name="reason" />
         <Variable x:TypeArguments="x:String" Name="requiredStatus" />
         <Variable x:TypeArguments="x:String" Name="allowedBranches" />
-        <Variable x:TypeArguments="x:String" Name="outputPath">
-          <Variable.Default>
-            <Literal x:TypeArguments="x:String">C:\PlacementBot\Output\ShortlistReport.xlsx</Literal>
-          </Variable.Default>
-        </Variable>
-        <Variable x:TypeArguments="x:String" Name="rulesPath">
-          <Variable.Default>
-            <Literal x:TypeArguments="x:String">C:\PlacementBot\Input\EligibilityRules.xlsx</Literal>
-          </Variable.Default>
-        </Variable>
-        <Variable x:TypeArguments="x:String" Name="inputPath">
-          <Variable.Default>
-            <Literal x:TypeArguments="x:String">C:\PlacementBot\Input\StudentRecords.xlsx</Literal>
-          </Variable.Default>
-        </Variable>
+        <Variable x:TypeArguments="x:String" Default="C:\PlacementBot\Output\ShortlistReport.xlsx" Name="outputPath" />
+        <Variable x:TypeArguments="x:String" Default="C:\PlacementBot\Input\EligibilityRules.xlsx" Name="rulesPath" />
+        <Variable x:TypeArguments="x:String" Default="C:\PlacementBot\Input\StudentRecords.xlsx" Name="inputPath" />
       </Sequence.Variables>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -147,8 +131,8 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
       <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Campus Placement Bot started&quot;]" />
-      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtStudents]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_1" SheetName="Students" WorkbookPath="[inputPath]" />
-      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtRules]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_3" SheetName="Rules" WorkbookPath="[rulesPath]" />
+      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtStudents]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_1" SheetName="Students" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Input\StudentRecords_100.xlsx" />
+      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtRules]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_3" SheetName="Rules" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Input\EligibilityRules.xlsx" />
       <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dtRules]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="555.2,407.2" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
         <ui:ForEachRow.Body>
           <ActivityAction x:TypeArguments="sd:DataRow">
@@ -297,7 +281,7 @@
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <If Condition="[CDbl(studentRow(&quot;CGPA&quot;)) &lt; minCGPA]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_2">
+                      <If Condition="[CDbl(studentRow(&quot;CGPA&quot;)) &lt;  minCGPA]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_2">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_8">
                             <sap:WorkflowViewStateService.ViewState>
@@ -551,8 +535,8 @@
           </Sequence>
         </If.Else>
       </If>
-      <ui:WriteRange DataTable="[dtShortlist]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_1" SheetName="Shortlisted" StartingCell="A1" WorkbookPath="[outputPath]" />
-      <ui:WriteRange StartingCell="{x:Null}" DataTable="[dtRejected]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_2" SheetName="Rejected" WorkbookPath="[outputPath]" />
+      <ui:WriteRange DataTable="[dtShortlist]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_1" SheetName="Shortlisted" StartingCell="A1" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Output\ShortlistReport.xlsx" />
+      <ui:WriteRange StartingCell="{x:Null}" DataTable="[dtRejected]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_2" SheetName="Rejected" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Output\ShortlistReport.xlsx" />
       <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Done. Shortlisted: &quot; &amp; dtShortlist.Rows.Count &amp; &quot; | Rejected: &quot; &amp; dtRejected.Rows.Count]" />
       <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" AutoCloseAfter="00:00:00" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="555.2,113.6" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[&quot;Done. Shortlisted: &quot; &amp; dtShortlist.Rows.Count &amp; &quot; | Rejected: &quot; &amp; dtRejected.Rows.Count]" />
     </Sequence>
