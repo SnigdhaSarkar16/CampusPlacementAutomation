@@ -1,23 +1,25 @@
 # Campus Placement Automation (UiPath RPA)
 
-An RPA bot built in **UiPath Studio (Community Edition)** that automates campus placement shortlisting. It reads student records from Excel, applies configurable eligibility rules, and produces a shortlist report — with no manual filtering required.
+An RPA bot built in **UiPath Studio (Community Edition)** that automates campus placement shortlisting. It reads student records from Excel, applies configurable eligibility rules, produces a shortlist report, and emails every shortlisted student automatically — with no manual filtering or follow-up required.
 
 **Live demo:** [snigdhasarkar16.github.io/CampusPlacementAutomation](https://snigdhasarkar16.github.io/CampusPlacementAutomation/) — upload the bot's generated `ShortlistReport.xlsx` to see the results board.
 
 ## What it does
 
-1. Reads student records from `StudentRecords.xlsx`
-2. Reads eligibility rules from `EligibilityRules.xlsx` (editable without touching the workflow)
-3. Checks every student against: minimum CGPA, minimum 10th/12th percentage, active backlogs, minimum attendance, eligible branches, and placement status
-4. Writes `ShortlistReport.xlsx` with two sheets:
-   - **Shortlisted** — eligible students, sorted by CGPA (highest first)
-   - **Rejected** — ineligible students, each with the specific reason(s) they were rejected
+- Reads student records from `StudentRecords.xlsx`
+- Reads eligibility rules from `EligibilityRules.xlsx` (editable without touching the workflow)
+- Checks every student against: minimum CGPA, minimum 10th/12th percentage, active backlogs, minimum attendance, eligible branches, and placement status
+- Writes `ShortlistReport.xlsx` with two sheets:
+  - **Shortlisted** — eligible students, sorted by CGPA (highest first)
+  - **Rejected** — ineligible students, each with the specific reason(s) they were rejected
+- **Sends a personalized email to every shortlisted student**, confirming their result along with their CGPA and branch
 
 ## Tech stack
 
 - UiPath Studio Community Edition
 - Excel (`.xlsx`) as the data source and rules configuration
 - VB.NET expressions inside UiPath activities
+- UiPath Mail Activities (SMTP, connected via Gmail) for automated notifications
 
 ## Project structure
 
@@ -38,8 +40,9 @@ CampusPlacementAutomation/
 2. Clone this repo.
 3. Open `Main.xaml` in Studio.
 4. Update the `inputPath`, `rulesPath`, and `outputPath` variables if your folder locations differ.
-5. Press `F5` (or Debug → Run File).
-6. Open the generated `ShortlistReport.xlsx` in the `Output` folder.
+5. Connect a Mail account to the **Send SMTP Email** activity (Add new connection → sign in with Gmail) if you want email notifications to run.
+6. Press `F5` (or Debug → Run File).
+7. Open the generated `ShortlistReport.xlsx` in the `Output` folder.
 
 ## Eligibility rules (default, editable in `EligibilityRules.xlsx`)
 
@@ -53,6 +56,14 @@ CampusPlacementAutomation/
 | Eligible branches | CSE, IT, ECE, AIDS |
 | Required placement status | Unplaced |
 
+## Email notifications
+
+After the shortlist report is generated, the bot loops through every shortlisted student and sends a personalized email confirming their result, including their CGPA and branch. Each send is wrapped in a Try Catch, so a single failed email (e.g. an invalid address) is logged and skipped rather than stopping the run.
+
+**Demo mode (current default):** all emails are routed to one address (`demoRecipient`) regardless of the student's actual email, since the sample `StudentRecords.xlsx` contains placeholder addresses (`@college.edu`) that would otherwise bounce. The email body is still fully personalized per student.
+
+**Switching to production:** change the **To** field on the Send SMTP Email activity from `demoRecipient` to `emailRow("Email").ToString`, and point `StudentRecords.xlsx` at real student emails. For an institutional deployment, this would typically also move to an official placement-cell mail account (rather than a personal Gmail), add a short delay between sends to avoid provider rate limits, and store the mail connection as an Orchestrator asset rather than a personal OAuth connection.
+
 ## Results dashboard
 
 **[snigdhasarkar16.github.io/CampusPlacementAutomation](https://snigdhasarkar16.github.io/CampusPlacementAutomation/)**
@@ -62,6 +73,7 @@ CampusPlacementAutomation/
 - Shortlisted vs. rejected counts
 - Shortlisted students by branch
 - A sortable, searchable Shortlisted table (by CGPA) and a Rejected table (with reason tags)
+- A live eligibility checker — enter a candidate's details to test the same rules interactively
 
 ## Author
 
