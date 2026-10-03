@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:umae="clr-namespace:UiPath.Mail.Activities.Enums;assembly=UiPath.Mail.Activities" xmlns:umame="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail.Enums;assembly=UiPath.Mail.Activities" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.Mail.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System.Activities</x:String>
@@ -36,6 +36,15 @@
       <x:String>UiPath.DataTableUtilities</x:String>
       <x:String>System.Numerics</x:String>
       <x:String>System.Globalization</x:String>
+      <x:String>System.Activities.Runtime.Collections</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>UiPath.Mail</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Mail.Enums</x:String>
+      <x:String>UiPath.Shared.Activities.Utils</x:String>
+      <x:String>UiPath.Mail.Activities.Enums</x:String>
+      <x:String>UiPath.Mail.SMTP.Activities</x:String>
+      <x:String>UiPath.Shared.Activities</x:String>
+      <x:String>UiPath.Mail.Activities</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -98,16 +107,26 @@
       <AssemblyReference>System.Collections.Immutable</AssemblyReference>
       <AssemblyReference>System.Linq.Parallel</AssemblyReference>
       <AssemblyReference>System.Linq.Queryable</AssemblyReference>
+      <AssemblyReference>System.Memory.Data</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1110,8990.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="753.6,10616" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Sequence DisplayName="Placement Bot" sap:VirtualizedContainerService.HintSize="588.8,8967.2" sap2010:WorkflowViewState.IdRef="Sequence_2">
+    <Sequence DisplayName="Placement Bot" sap:VirtualizedContainerService.HintSize="753.6,10592.8" sap2010:WorkflowViewState.IdRef="Sequence_2">
       <Sequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="emailBody" />
+        <Variable x:TypeArguments="x:String" Name="emailsubject" />
+        <Variable x:TypeArguments="x:String" Default="study33weeb@gmail.com" Name="demoRecipient" />
+        <Variable x:TypeArguments="x:String" Default="study33weeb@gmail.com" Name="senderEmail" />
+        <Variable x:TypeArguments="x:String" Name="gmailAppPassword" />
         <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Default="[New Dictionary(Of String, String)]" Name="config" />
         <Variable x:TypeArguments="sd:DataTable" Name="dtRejected" />
         <Variable x:TypeArguments="sd:DataTable" Name="dtShortlist" />
@@ -130,10 +149,15 @@
           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Campus Placement Bot started&quot;]" />
-      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtStudents]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_1" SheetName="Students" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Input\StudentRecords_100.xlsx" />
-      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtRules]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_3" SheetName="Rules" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Input\EligibilityRules.xlsx" />
-      <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dtRules]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="555.2,407.2" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+      <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Campus Placement Bot started&quot;]" />
+      <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Input Dialog" sap:VirtualizedContainerService.HintSize="720,273.6" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="True" Label="Enter your Gmail App Password:" Title="Email Setup" TopMost="False">
+        <ui:InputDialog.Result>
+          <OutArgument x:TypeArguments="x:String">[gmailAppPassword]</OutArgument>
+        </ui:InputDialog.Result>
+      </ui:InputDialog>
+      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtStudents]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="720,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_1" SheetName="Students" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Input\StudentRecords_100.xlsx" />
+      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[dtRules]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="720,226.4" sap2010:WorkflowViewState.IdRef="ReadRange_3" SheetName="Rules" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Input\EligibilityRules.xlsx" />
+      <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dtRules]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="720,407.2" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
         <ui:ForEachRow.Body>
           <ActivityAction x:TypeArguments="sd:DataRow">
             <ActivityAction.Argument>
@@ -157,7 +181,7 @@
           </ActivityAction>
         </ui:ForEachRow.Body>
       </ui:ForEachRow>
-      <Assign sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="Assign_3">
+      <Assign sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="Assign_3">
         <Assign.To>
           <OutArgument x:TypeArguments="x:Double">[minCGPA]</OutArgument>
         </Assign.To>
@@ -165,7 +189,7 @@
           <InArgument x:TypeArguments="x:Double">[Double.Parse(config("MinCGPA"), System.Globalization.CultureInfo.InvariantCulture)]</InArgument>
         </Assign.Value>
       </Assign>
-      <Assign sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="Assign_4">
+      <Assign sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="Assign_4">
         <Assign.To>
           <OutArgument x:TypeArguments="x:Double">[minTenth]</OutArgument>
         </Assign.To>
@@ -173,7 +197,7 @@
           <InArgument x:TypeArguments="x:Double">[Double.Parse(config("MinTenthPercent"), System.Globalization.CultureInfo.InvariantCulture)]</InArgument>
         </Assign.Value>
       </Assign>
-      <Assign sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="Assign_5">
+      <Assign sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="Assign_5">
         <Assign.To>
           <OutArgument x:TypeArguments="x:Double">[minTwelfth]</OutArgument>
         </Assign.To>
@@ -189,7 +213,7 @@
           <InArgument x:TypeArguments="x:Double">[Double.Parse(config("MinAttendance"), System.Globalization.CultureInfo.InvariantCulture)]</InArgument>
         </Assign.Value>
       </Assign>
-      <Assign sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="Assign_7">
+      <Assign sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="Assign_7">
         <Assign.To>
           <OutArgument x:TypeArguments="x:Int32">[maxBacklogs]</OutArgument>
         </Assign.To>
@@ -205,7 +229,7 @@
           <InArgument x:TypeArguments="x:String">[config("AllowedBranches")]</InArgument>
         </Assign.Value>
       </Assign>
-      <Assign sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="Assign_9">
+      <Assign sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="Assign_9">
         <Assign.To>
           <OutArgument x:TypeArguments="x:String">[requiredStatus]</OutArgument>
         </Assign.To>
@@ -213,7 +237,7 @@
           <InArgument x:TypeArguments="x:String">[config("RequiredStatus")]</InArgument>
         </Assign.Value>
       </Assign>
-      <Assign sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="Assign_10">
+      <Assign sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="Assign_10">
         <Assign.To>
           <OutArgument x:TypeArguments="sd:DataTable">[dtShortlist]</OutArgument>
         </Assign.To>
@@ -221,7 +245,7 @@
           <InArgument x:TypeArguments="sd:DataTable">[dtStudents.Clone()]</InArgument>
         </Assign.Value>
       </Assign>
-      <Assign sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="Assign_11">
+      <Assign sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="Assign_11">
         <Assign.To>
           <OutArgument x:TypeArguments="sd:DataTable">[dtRejected]</OutArgument>
         </Assign.To>
@@ -229,14 +253,14 @@
           <InArgument x:TypeArguments="sd:DataTable">[dtStudents.Clone()]</InArgument>
         </Assign.Value>
       </Assign>
-      <ui:AddDataColumn x:TypeArguments="x:Object" AllowDBNull="{x:Null}" AutoIncrement="{x:Null}" Column="{x:Null}" DefaultValue="{x:Null}" MaxLength="{x:Null}" Unique="{x:Null}" ColumnName="RejectionReason" DataTable="[dtRejected]" DisplayName="Add Data Column" sap:VirtualizedContainerService.HintSize="555.2,220" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_1" />
-      <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dtStudents]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="555.2,4761.6" sap2010:WorkflowViewState.IdRef="ForEachRow_2">
+      <ui:AddDataColumn x:TypeArguments="x:Object" AllowDBNull="{x:Null}" AutoIncrement="{x:Null}" Column="{x:Null}" DefaultValue="{x:Null}" MaxLength="{x:Null}" Unique="{x:Null}" ColumnName="RejectionReason" DataTable="[dtRejected]" DisplayName="Add Data Column" sap:VirtualizedContainerService.HintSize="720,220" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_1" />
+      <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dtStudents]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="720,4761.6" sap2010:WorkflowViewState.IdRef="ForEachRow_2">
         <ui:ForEachRow.Body>
           <ActivityAction x:TypeArguments="sd:DataRow">
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="sd:DataRow" Name="studentRow" />
             </ActivityAction.Argument>
-            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="553.6,4580" sap2010:WorkflowViewState.IdRef="Sequence_4">
+            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="718.4,4580" sap2010:WorkflowViewState.IdRef="Sequence_4">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -250,7 +274,7 @@
                   <InArgument x:TypeArguments="x:String">[""]</InArgument>
                 </Assign.Value>
               </Assign>
-              <If Condition="[IsDBNull(studentRow(&quot;CGPA&quot;)) OrElse String.IsNullOrWhiteSpace(studentRow(&quot;CGPA&quot;).ToString) OrElse String.IsNullOrWhiteSpace(studentRow(&quot;Email&quot;).ToString)]" sap:VirtualizedContainerService.HintSize="520,3673.6" sap2010:WorkflowViewState.IdRef="If_1">
+              <If Condition="[IsDBNull(studentRow(&quot;CGPA&quot;)) OrElse String.IsNullOrWhiteSpace(studentRow(&quot;CGPA&quot;).ToString) OrElse String.IsNullOrWhiteSpace(studentRow(&quot;Email&quot;).ToString)]" sap:VirtualizedContainerService.HintSize="684.8,3673.6" sap2010:WorkflowViewState.IdRef="If_1">
                 <If.Then>
                   <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="518.4,225.6" sap2010:WorkflowViewState.IdRef="Sequence_5">
                     <sap:WorkflowViewStateService.ViewState>
@@ -269,19 +293,19 @@
                   </Sequence>
                 </If.Then>
                 <If.Else>
-                  <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="518.4,3309.6" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                  <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="683.2,3309.6" sap2010:WorkflowViewState.IdRef="Sequence_6">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                    <Sequence DisplayName="Rule Checks" sap:VirtualizedContainerService.HintSize="484.8,3249.6" sap2010:WorkflowViewState.IdRef="Sequence_7">
+                    <Sequence DisplayName="Rule Checks" sap:VirtualizedContainerService.HintSize="649.6,3249.6" sap2010:WorkflowViewState.IdRef="Sequence_7">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <If Condition="[CDbl(studentRow(&quot;CGPA&quot;)) &lt;  minCGPA]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_2">
+                      <If Condition="[CDbl(studentRow(&quot;CGPA&quot;)) &lt;  minCGPA]" sap:VirtualizedContainerService.HintSize="616,453.6" sap2010:WorkflowViewState.IdRef="If_2">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_8">
                             <sap:WorkflowViewStateService.ViewState>
@@ -309,7 +333,7 @@
                           </Sequence>
                         </If.Else>
                       </If>
-                      <If Condition="[CDbl(studentRow(&quot;Tenth_Percent&quot;)) &lt; minTenth]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_3">
+                      <If Condition="[CDbl(studentRow(&quot;Tenth_Percent&quot;)) &lt; minTenth]" sap:VirtualizedContainerService.HintSize="616,453.6" sap2010:WorkflowViewState.IdRef="If_3">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_10">
                             <sap:WorkflowViewStateService.ViewState>
@@ -337,7 +361,7 @@
                           </Sequence>
                         </If.Else>
                       </If>
-                      <If Condition="[CDbl(studentRow(&quot;Twelfth_Percent&quot;)) &lt; minTwelfth]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_4">
+                      <If Condition="[CDbl(studentRow(&quot;Twelfth_Percent&quot;)) &lt; minTwelfth]" sap:VirtualizedContainerService.HintSize="616,453.6" sap2010:WorkflowViewState.IdRef="If_4">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_12">
                             <sap:WorkflowViewStateService.ViewState>
@@ -365,7 +389,7 @@
                           </Sequence>
                         </If.Else>
                       </If>
-                      <If Condition="[CInt(studentRow(&quot;ActiveBacklogs&quot;)) &gt; maxBacklogs]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_5">
+                      <If Condition="[CInt(studentRow(&quot;ActiveBacklogs&quot;)) &gt; maxBacklogs]" sap:VirtualizedContainerService.HintSize="616,453.6" sap2010:WorkflowViewState.IdRef="If_5">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_14">
                             <sap:WorkflowViewStateService.ViewState>
@@ -393,7 +417,7 @@
                           </Sequence>
                         </If.Else>
                       </If>
-                      <If Condition="[CDbl(studentRow(&quot;Attendance_Percent&quot;)) &lt; minAttendance]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_6">
+                      <If Condition="[CDbl(studentRow(&quot;Attendance_Percent&quot;)) &lt; minAttendance]" sap:VirtualizedContainerService.HintSize="616,453.6" sap2010:WorkflowViewState.IdRef="If_6">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_16">
                             <sap:WorkflowViewStateService.ViewState>
@@ -421,7 +445,7 @@
                           </Sequence>
                         </If.Else>
                       </If>
-                      <If Condition="[Not allowedBranches.Split(&quot;,&quot;c).Select(Function(b) b.Trim().ToUpper()).Contains(studentRow(&quot;Branch&quot;).ToString.Trim().ToUpper())]" sap:VirtualizedContainerService.HintSize="451.2,453.6" sap2010:WorkflowViewState.IdRef="If_7">
+                      <If Condition="[Not allowedBranches.Split(&quot;,&quot;c).Select(Function(b) b.Trim().ToUpper()).Contains(studentRow(&quot;Branch&quot;).ToString.Trim().ToUpper())]" sap:VirtualizedContainerService.HintSize="616,453.6" sap2010:WorkflowViewState.IdRef="If_7">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_18">
                             <sap:WorkflowViewStateService.ViewState>
@@ -449,7 +473,7 @@
                           </Sequence>
                         </If.Else>
                       </If>
-                      <If Condition="[String.Compare(studentRow(&quot;PlacementStatus&quot;).ToString.Trim(), requiredStatus, True) &lt;&gt; 0]" sap:VirtualizedContainerService.HintSize="451.2,444.8" sap2010:WorkflowViewState.IdRef="If_8">
+                      <If Condition="[String.Compare(studentRow(&quot;PlacementStatus&quot;).ToString.Trim(), requiredStatus, True) &lt;&gt; 0]" sap:VirtualizedContainerService.HintSize="616,444.8" sap2010:WorkflowViewState.IdRef="If_8">
                         <If.Then>
                           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_20">
                             <sap:WorkflowViewStateService.ViewState>
@@ -481,7 +505,7 @@
                   </Sequence>
                 </If.Else>
               </If>
-              <If Condition="[reason = &quot;&quot;]" sap:VirtualizedContainerService.HintSize="520,672" sap2010:WorkflowViewState.IdRef="If_9">
+              <If Condition="[reason = &quot;&quot;]" sap:VirtualizedContainerService.HintSize="684.8,672" sap2010:WorkflowViewState.IdRef="If_9">
                 <If.Then>
                   <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,271.2" sap2010:WorkflowViewState.IdRef="Sequence_22">
                     <sap:WorkflowViewStateService.ViewState>
@@ -507,7 +531,7 @@
           </ActivityAction>
         </ui:ForEachRow.Body>
       </ui:ForEachRow>
-      <If Condition="[dtShortlist.Rows.Count &gt; 0]" sap:VirtualizedContainerService.HintSize="555.2,453.6" sap2010:WorkflowViewState.IdRef="If_10">
+      <If Condition="[dtShortlist.Rows.Count &gt; 0]" sap:VirtualizedContainerService.HintSize="720,453.6" sap2010:WorkflowViewState.IdRef="If_10">
         <If.Then>
           <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,225.6" sap2010:WorkflowViewState.IdRef="Sequence_24">
             <sap:WorkflowViewStateService.ViewState>
@@ -535,10 +559,98 @@
           </Sequence>
         </If.Else>
       </If>
-      <ui:WriteRange DataTable="[dtShortlist]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_1" SheetName="Shortlisted" StartingCell="A1" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Output\ShortlistReport.xlsx" />
-      <ui:WriteRange StartingCell="{x:Null}" DataTable="[dtRejected]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="555.2,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_2" SheetName="Rejected" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Output\ShortlistReport.xlsx" />
-      <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="555.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Done. Shortlisted: &quot; &amp; dtShortlist.Rows.Count &amp; &quot; | Rejected: &quot; &amp; dtRejected.Rows.Count]" />
-      <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" AutoCloseAfter="00:00:00" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="555.2,113.6" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[&quot;Done. Shortlisted: &quot; &amp; dtShortlist.Rows.Count &amp; &quot; | Rejected: &quot; &amp; dtRejected.Rows.Count]" />
+      <ui:DeleteFileX DisplayName="Delete File" sap:VirtualizedContainerService.HintSize="720,123.2" sap2010:WorkflowViewState.IdRef="DeleteFileX_1" Path="C:/Users/sarka/OneDrive/Documents/UiPath/CampusPlacementAutomation/Output/ShortlistReport.xlsx" />
+      <ui:WriteRange DataTable="[dtShortlist]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="720,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_1" SheetName="Shortlisted" StartingCell="A1" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Output\ShortlistReport.xlsx" />
+      <ui:WriteRange StartingCell="{x:Null}" DataTable="[dtRejected]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="720,278.4" sap2010:WorkflowViewState.IdRef="WriteRange_2" SheetName="Rejected" WorkbookPath="C:\Users\sarka\OneDrive\Documents\UiPath\CampusPlacementAutomation\Output\ShortlistReport.xlsx" />
+      <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dtShortlist]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="720,1228.8" sap2010:WorkflowViewState.IdRef="ForEachRow_3">
+        <ui:ForEachRow.Body>
+          <ActivityAction x:TypeArguments="sd:DataRow">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="sd:DataRow" Name="emailRow" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="484.8,1047.2" sap2010:WorkflowViewState.IdRef="Sequence_26">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <TryCatch DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="451.2,987.2" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+                <TryCatch.Try>
+                  <Sequence DisplayName="Try" sap:VirtualizedContainerService.HintSize="449.6,740.8" sap2010:WorkflowViewState.IdRef="Sequence_27">
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                    <Assign sap:VirtualizedContainerService.HintSize="416,174.4" sap2010:WorkflowViewState.IdRef="Assign_23">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[emailsubject]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">["Placement Shortlist Result - " &amp; emailRow("Name").ToString]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign sap:VirtualizedContainerService.HintSize="416,174.4" sap2010:WorkflowViewState.IdRef="Assign_24">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[emailBody]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">["Dear " &amp; emailRow("Name").ToString &amp; "," &amp; Environment.NewLine &amp; Environment.NewLine &amp; "Congratulations! Based on your academic record (CGPA: " &amp; emailRow("CGPA").ToString &amp; ", Branch: " &amp; emailRow("Branch").ToString &amp; "), you have been shortlisted for the upcoming placement drive." &amp; Environment.NewLine &amp; Environment.NewLine &amp; "Please check the placement notice board for further instructions." &amp; Environment.NewLine &amp; Environment.NewLine &amp; "Regards," &amp; Environment.NewLine &amp; "Placement Cell"]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <ui:SendMail Bcc="{x:Null}" Cc="{x:Null}" ContinueOnError="{x:Null}" Email="{x:Null}" MailMessage="{x:Null}" Password="{x:Null}" Port="{x:Null}" ReplyTo="{x:Null}" ResourceAttachmentList="{x:Null}" ResourceAttachments="{x:Null}" Result="{x:Null}" SecurePassword="{x:Null}" Server="{x:Null}" TimeoutMS="{x:Null}" UseOAuth="{x:Null}" Action="Forward" AttachmentInputMode="Existing" Body="[emailBody]" ConnectionId="b33a5120-fdf6-4fc3-a6ae-3331c61484f3" ConnectionMode="IntegrationService" CreatedAfterSolutionSupport="True" DisplayName="Send SMTP Email" EnableSSL="True" From="[senderEmail]" sap:VirtualizedContainerService.HintSize="416,332" sap2010:WorkflowViewState.IdRef="SendMail_1" IgnoreCRL="False" IsBodyHtml="False" Name="Placement Cell" SecureConnection="Auto" Subject="[emailSubject]" To="[demoRecipient]" UseISConnection="True" UseRichTextEditor="True">
+                      <ui:SendMail.AttachmentsBackup>
+                        <usau:BackupSlot x:TypeArguments="umame:AttachmentInputMode" StoredValue="Existing">
+                          <usau:BackupSlot.BackupValues>
+                            <scg:Dictionary x:TypeArguments="umame:AttachmentInputMode, scg:List(x:Object)" />
+                          </usau:BackupSlot.BackupValues>
+                        </usau:BackupSlot>
+                      </ui:SendMail.AttachmentsBackup>
+                      <ui:SendMail.ConnectionDetailsBackupSlot>
+                        <usau:BackupSlot x:TypeArguments="umae:ConnectionDetails" StoredValue="IntegrationService">
+                          <usau:BackupSlot.BackupValues>
+                            <scg:Dictionary x:TypeArguments="umae:ConnectionDetails, scg:List(x:Object)" />
+                          </usau:BackupSlot.BackupValues>
+                        </usau:BackupSlot>
+                      </ui:SendMail.ConnectionDetailsBackupSlot>
+                      <ui:SendMail.Files>
+                        <scg:List x:TypeArguments="InArgument(x:String)" Capacity="0" />
+                      </ui:SendMail.Files>
+                    </ui:SendMail>
+                  </Sequence>
+                </TryCatch.Try>
+                <TryCatch.Catches>
+                  <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+                    <ActivityAction x:TypeArguments="s:Exception">
+                      <ActivityAction.Argument>
+                        <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                      </ActivityAction.Argument>
+                      <Sequence DisplayName="Catch" sap:VirtualizedContainerService.HintSize="449.6,89.6" sap2010:WorkflowViewState.IdRef="Sequence_28">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                      </Sequence>
+                    </ActivityAction>
+                  </Catch>
+                </TryCatch.Catches>
+                <TryCatch.Finally>
+                  <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="449.6,24.8" sap2010:WorkflowViewState.IdRef="Sequence_29">
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                  </Sequence>
+                </TryCatch.Finally>
+              </TryCatch>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEachRow.Body>
+      </ui:ForEachRow>
+      <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="720,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Done. Shortlisted: &quot; &amp; dtShortlist.Rows.Count &amp; &quot; | Rejected: &quot; &amp; dtRejected.Rows.Count]" />
+      <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" AutoCloseAfter="00:00:00" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="720,113.6" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[&quot;Done. Shortlisted: &quot; &amp; dtShortlist.Rows.Count &amp; &quot; | Rejected: &quot; &amp; dtRejected.Rows.Count]" />
     </Sequence>
   </Sequence>
 </Activity>
